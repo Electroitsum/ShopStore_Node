@@ -1,4 +1,4 @@
-const {body } = require('express-validator');
+const {body, check } = require('express-validator');
 const registerValidate = () => {
     return [
         body('email').isEmail().withMessage('Email is invalid!'), body('name').notEmpty().withMessage('Name is invalid!'), body('password').notEmpty().withMessage('Password is invalid!')
@@ -10,4 +10,10 @@ const loginValidate = () => {
     ]
 }
 
-module.exports = {registerValidate, loginValidate}
+const addProductValidate = () => {
+    return [
+        body('productName').notEmpty().withMessage('Product Name is invalid!'), body('productDescription').notEmpty().withMessage('Product Description is Required!'), body('productPrice').notEmpty().withMessage('Product Price is Required!'), body('productCount').notEmpty().withMessage('Product Count is Required!')
+    ]
+}
+
+module.exports = {registerValidate, loginValidate, addProductValidate}

@@ -3,6 +3,8 @@ const mysql = require("mysql");
 const { check, validationResult } = require("express-validator");
 const { errorResponse } = require("../utilities/errorResponse");
 var jwt = require("jsonwebtoken");
+const moment = require("moment");
+const util = require('util')
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -18,13 +20,11 @@ const qu = connection.connect(function (err) {
 });
 
 const register = (req, res, next) => {
-  console.log(req.body);
   if (validationResult(req)?.errors?.length > 0) {
     res.status(500).send(errorResponse(validationResult(req)?.errors?.[0]));
   } else {
     const query2 = `SELECT COUNT(*) as count FROM user WHERE email = ?`;
     const findId = `SELECT COUNT(*) AS count FROM user WHERE userId = ?`;
-    // const userId = (Math.random()*10000000000).toString().slice(0, 10)
 
     const test = () => {
       const userId = (Math.random() * 1000000000000).toString().slice(0, 10);
@@ -35,7 +35,7 @@ const register = (req, res, next) => {
           if (result[0].count > 0) {
             test();
           } else {
-            const query = `INSERT INTO user (name, email, password, userId) VALUES ("${req.body.name}", "${req.body.email}", "${req.body.password}", "${userId}")`;
+            const query = `INSERT INTO user (name, email, password, userId, registerDate) VALUES ("${req.body.name}", "${req.body.email}", "${req.body.password}", "${userId}", "${moment().format("DD/MM/YYYY")}")`;
             connection.query(
               query2,
               [req.body.email],
@@ -47,6 +47,7 @@ const register = (req, res, next) => {
                     res.status(200).send({
                       status: true,
                       message: "User already exist!",
+                      file: __dirname
                     });
                   } else {
                     connection.query(query, function (err, result, fields) {

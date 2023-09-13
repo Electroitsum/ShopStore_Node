@@ -23,7 +23,7 @@ const authenticate = (req, res, next) => {
   } else {
     const userMatch = `SELECT COUNT(*) AS count FROM user WHERE (email = ? && password = ?)`;
     const userData = `SELECT id, name, email, userId FROM user WHERE (email = ? && password = ?)`;
-    console.log(req.body);
+    // console.log(req.body);
     connection.query(
       userMatch,
       [req.body.email, req.body.password],
