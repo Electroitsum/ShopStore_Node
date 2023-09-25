@@ -1,10 +1,10 @@
 const express = require("express");
-const mysql = require("mysql");
 const { check, validationResult } = require("express-validator");
 const { errorResponse } = require("../utilities/errorResponse");
 var jwt = require("jsonwebtoken");
 const multer = require("multer");
 const fs = require("fs");
+const { dbConnection } = require("../cnfig/db-config");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -19,18 +19,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "shopStore",
-  port: 3306,
-  multipleStatements: true,
-});
-const qu = connection.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
 
 const addProduct = (req, res, next) => {
   var ext;
@@ -50,18 +38,20 @@ const addProduct = (req, res, next) => {
         .slice(0, 12)
         .toString()
         .slice(0, 10);
-      connection.query(findProductId, [productIdGen], (err, result, field) => {
+      dbConnection.query(findProductId, [productIdGen], (err, result, field) => {
         if (err) {
           console.log(err);
         } else if (result[0].count > 0) {
           insertProduct();
         } else {
-          const insertQuery = `INSERT INTO products (productName, productId,isActive,productPrice, productDescription,availabelCount) VALUES ('${
+          const insertQuery = `INSERT INTO products (productName, userId, productId,isActive,productPrice, productDescription, availabelCount) VALUES ('${
             req.body.productName
-          }', ${productIdGen},${1},${req.body.productPrice},'${
+          }', '${
+            req.userData.userId
+          }',  ${productIdGen},${1},${req.body.productPrice},'${
             req.body.productDescription
           }',${req.body.availabelCount})`;
-          connection.query(insertQuery, (err, result, fields) => {
+          dbConnection.query(insertQuery, (err, result, fields) => {
             if (err) {
               throw err;
             } else {

@@ -16,4 +16,10 @@ const addProductValidate = () => {
     ]
 }
 
-module.exports = {registerValidate, loginValidate, addProductValidate}
+const cartValidator = () => {
+    return [
+        body('userId').notEmpty().withMessage('Invalid User-Id!'), body('productId').notEmpty().withMessage('Invalid Product-Id!')
+    ]
+}
+
+module.exports = {registerValidate, loginValidate, addProductValidate, cartValidator}

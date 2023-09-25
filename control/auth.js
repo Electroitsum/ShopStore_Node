@@ -9,6 +9,7 @@ const auth = (req, res, next) => {
           message: "Session Expired!",
         });
       } else {
+        req.userData = result.data[0]
         next();
       }
     });

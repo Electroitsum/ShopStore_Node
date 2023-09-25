@@ -1,21 +1,10 @@
 const express = require("express");
-const mysql = require("mysql");
 const { check, validationResult } = require("express-validator");
 const { errorResponse } = require("../utilities/errorResponse");
 var jwt = require("jsonwebtoken");
+const { dbConnection } = require("../cnfig/db-config");
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "shopStore",
-  port: 3306,
-  multipleStatements: true,
-});
-const qu = connection.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+
 
 const authenticate = (req, res, next) => {
   if (validationResult(req)?.errors?.length > 0) {
@@ -24,7 +13,7 @@ const authenticate = (req, res, next) => {
     const userMatch = `SELECT COUNT(*) AS count FROM user WHERE (email = ? && password = ?)`;
     const userData = `SELECT id, name, email, userId FROM user WHERE (email = ? && password = ?)`;
     // console.log(req.body);
-    connection.query(
+    dbConnection.query(
       userMatch,
       [req.body.email, req.body.password],
       (err, result, fields) => {
@@ -32,7 +21,7 @@ const authenticate = (req, res, next) => {
           throw err;
         } else {
           if (result[0].count > 0) {
-            connection.query(
+            dbConnection.query(
               userData,
               [req.body.email, req.body.password],
               (err, result, fields) => {
