@@ -19,7 +19,7 @@ app.use('/auth', auth)
 
 app.use('/user', registration);
 app.use('/', login)
-app.use('/auth/Product', addProduct)
+app.use('/auth/Products', addProduct)
 // app.use('/auth/Product', addProduct)
 
 

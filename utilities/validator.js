@@ -12,7 +12,7 @@ const loginValidate = () => {
 
 const addProductValidate = () => {
     return [
-        body('productName').notEmpty().withMessage('Product Name is invalid!'), body('productDescription').notEmpty().withMessage('Product Description is Required!'), body('productPrice').notEmpty().withMessage('Product Price is Required!'), body('productCount').notEmpty().withMessage('Product Count is Required!')
+        body('productName').notEmpty().withMessage('Product Name is Invalid!'), body('productDescription').notEmpty().withMessage('Product Description is Required!'), body('productPrice').notEmpty().withMessage('Product Price is Required!'), body('productCount').notEmpty().withMessage('Product Count is Required!')
     ]
 }
 
@@ -22,4 +22,12 @@ const cartValidator = () => {
     ]
 }
 
-module.exports = {registerValidate, loginValidate, addProductValidate, cartValidator}
+const getProductValidator = () => {
+    return [
+        body('productId').notEmpty().isNumeric().withMessage('Invalid Product Id!')
+    ]
+}
+
+
+
+module.exports = {registerValidate, loginValidate, addProductValidate, cartValidator, getProductValidator}

@@ -35,9 +35,8 @@ const register = (req, res, next) => {
                 } else {
                   if (result[0].count > 0) {
                     res.status(200).send({
-                      status: true,
+                      status: false,
                       message: "User already exist!",
-                      file: __dirname
                     });
                   } else {
                     dbConnection.query(query, function (err, result, fields) {
